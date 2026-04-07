@@ -40,6 +40,7 @@ export class SummaryComponent implements OnInit {
     hasReadRepoPermission: boolean = false;
     projectId: number;
     projectName: string;
+    project: Project;
     summaryInformation: any;
     endpoint: Endpoint;
     isCardView: boolean = true;
@@ -77,8 +78,8 @@ export class SummaryComponent implements OnInit {
         this.projectId = this.route.parent.parent.snapshot.params['id'];
         const resolverData = this.route.snapshot.parent.parent.data;
         if (resolverData) {
-            let project = <Project>resolverData['projectResolver'];
-            this.projectName = project.name;
+            this.project = <Project>resolverData['projectResolver'];
+            this.projectName = this.project.name;
         }
         const permissions = [
             {
@@ -209,5 +210,9 @@ export class SummaryComponent implements OnInit {
             );
         }
         return 0;
+    }
+
+    get isProxyCacheProject(): boolean {
+        return !!(this.project && this.project.registry_id);
     }
 }

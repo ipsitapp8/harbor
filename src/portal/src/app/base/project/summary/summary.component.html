@@ -27,14 +27,57 @@
 
 <ng-container *ngIf="!isCardView">
     <div *ngIf="summaryInformation">
-        <div class="pt-05 flex" *ngIf="summaryInformation?.registry">
+        <div class="pt-05 flex" *ngIf="isProxyCacheProject">
             <h4 class="mt-0 title-width">
                 {{ 'PROJECT.PROXY_CACHE_ENDPOINT' | translate }}
             </h4>
             <ul class="list-unstyled">
-                <li id="endpoint">
+                <li id="endpoint" *ngIf="summaryInformation?.registry">
                     {{ summaryInformation?.registry?.name }}-{{
                         summaryInformation?.registry?.url
+                    }}
+                </li>
+            </ul>
+        </div>
+        <div class="pt-05 flex" *ngIf="isProxyCacheProject">
+            <h4 class="mt-0 title-width">
+                {{ 'PROJECT.BANDWIDTH' | translate }}
+            </h4>
+            <ul class="list-unstyled">
+                <li>
+                    {{
+                        project?.metadata?.proxy_speed_kb === '-1' || project?.metadata?.proxy_speed_kb === -1
+                            ? ('QUOTA.UNLIMITED' | translate)
+                            : (project?.metadata?.proxy_speed_kb | amountUnit : 'B' : 'KB')
+                    }}
+                </li>
+            </ul>
+        </div>
+        <div class="pt-05 flex" *ngIf="isProxyCacheProject">
+            <h4 class="mt-0 title-width">
+                {{ 'PROJECT.CONNECTION_LIMIT' | translate }}
+            </h4>
+            <ul class="list-unstyled">
+                <li>
+                    {{
+                        project?.metadata?.max_upstream_conn === '-1' || project?.metadata?.max_upstream_conn === -1
+                            ? ('QUOTA.UNLIMITED' | translate)
+                            : project?.metadata?.max_upstream_conn
+                    }}
+                </li>
+            </ul>
+        </div>
+        <div class="pt-05 flex" *ngIf="isProxyCacheProject">
+            <h4 class="mt-0 title-width">
+                {{ 'PROJECT.PROXY_CACHE_LOCAL_ON_NOT_FOUND' | translate }}
+            </h4>
+            <ul class="list-unstyled">
+                <li>
+                    {{
+                        (project?.metadata?.proxy_cache_local_on_not_found === 'true' || project?.metadata?.proxy_cache_local_on_not_found === true
+                            ? 'CONFIRM.YES'
+                            : 'CONFIRM.NO'
+                        ) | translate
                     }}
                 </li>
             </ul>
