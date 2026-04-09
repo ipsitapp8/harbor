@@ -25,28 +25,49 @@ import { ErrorHandler } from '../../../shared/units/error-handler';
 import { SessionService } from '../../../shared/services/session.service';
 import { EndpointService } from '../../../shared/services/endpoint.service';
 import { SharedTestingModule } from '../../../shared/shared.module';
+import { RepositoryService } from '../../../../../ng-swagger-gen/services/repository.service';
+import { AmountUnitPipe } from '../../../shared/pipes/amount-unit.pipe';
 
 describe('SummaryComponent', () => {
     let component: SummaryComponent;
     let fixture: ComponentFixture<SummaryComponent>;
-    let fakeAppConfigService = {
+
+    const mockedSummaryInformation = {
+        repo_count: 0,
+        chart_count: 0,
+        project_admin_count: 1,
+        maintainer_count: 0,
+        developer_count: 0,
+        registry: {
+            name: 'test',
+            url: 'https://test.com',
+        },
+    };
+
+    const fakeAppConfigService = {
         getConfig() {
             return {
                 with_chartmuseum: false,
             };
         },
     };
-    let fakeProjectService = {
+
+    const fakeProjectService = {
         getProjectSummary: function () {
-            return of();
+            return of(mockedSummaryInformation);
         },
     };
-    let fakeErrorHandler = null;
-    let fakeUserPermissionService = {
+
+    const fakeErrorHandler = {
+        error: () => {},
+    };
+
+    const fakeUserPermissionService = {
         hasProjectPermissions: function () {
             return of([true, true]);
         },
     };
+
     const fakedSessionService = {
         getCurrentUser() {
             return {
@@ -64,21 +85,13 @@ describe('SummaryComponent', () => {
         },
     };
 
-    const mockedSummaryInformation = {
-        repo_count: 0,
-        chart_count: 0,
-        project_admin_count: 1,
-        maintainer_count: 0,
-        developer_count: 0,
-        registry: {
-            name: 'test',
-            url: 'https://test.com',
-        },
+    const fakedRepoService = {
+        listRepositories: () => of([]),
     };
 
-    beforeEach(() => {
-        TestBed.configureTestingModule({
-            declarations: [SummaryComponent],
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
+            declarations: [SummaryComponent, AmountUnitPipe],
             imports: [SharedTestingModule],
             schemas: [CUSTOM_ELEMENTS_SCHEMA],
             providers: [
@@ -91,16 +104,18 @@ describe('SummaryComponent', () => {
                 },
                 { provide: EndpointService, useValue: fakedEndpointService },
                 { provide: SessionService, useValue: fakedSessionService },
+                { provide: RepositoryService, useValue: fakedRepoService },
                 {
                     provide: ActivatedRoute,
                     useValue: {
-                        paramMap: of({ get: key => 'value' }),
+                        paramMap: of({ get: (key: string) => 'value' }),
                         snapshot: {
                             parent: {
                                 parent: {
-                                    snapshot: {
-                                        data: {
-                                            projectResolver: { registry_id: 3 },
+                                    data: {
+                                        projectResolver: {
+                                            registry_id: 3,
+                                            name: 'test-project',
                                         },
                                     },
                                 },
@@ -137,7 +152,7 @@ describe('SummaryComponent', () => {
         const endpoint: HTMLElement =
             fixture.nativeElement.querySelector('#endpoint');
         expect(endpoint).toBeTruthy();
-        expect(endpoint.innerText).toEqual('test-https://test.com');
+        expect(endpoint.textContent.trim()).toEqual('test-https://test.com');
     });
 
     it('should show card view', async () => {

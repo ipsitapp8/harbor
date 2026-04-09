@@ -73,6 +73,7 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HarborDatetimePipe } from './pipes/harbor-datetime.pipe';
+import { AmountUnitPipe } from './pipes/amount-unit.pipe';
 import { RemainingTimeComponent } from './components/remaining-time/remaining-time.component';
 import { LabelSelectorComponent } from './components/label-selector/label-selector.component';
 import { ScrollSectionDirective } from './directives/scroll/scroll-section.directive';
@@ -192,6 +193,7 @@ ClarityIcons.add({
         DatePickerComponent,
         ImageNameInputComponent,
         HarborDatetimePipe,
+        AmountUnitPipe,
         RemainingTimeComponent,
         LabelSelectorComponent,
         AppLevelAlertsComponent,
@@ -236,6 +238,7 @@ ClarityIcons.add({
         DatePickerComponent,
         ImageNameInputComponent,
         HarborDatetimePipe,
+        AmountUnitPipe,
         RemainingTimeComponent,
         LabelSelectorComponent,
         AppLevelAlertsComponent,

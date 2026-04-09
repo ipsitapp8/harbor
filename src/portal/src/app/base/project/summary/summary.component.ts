@@ -79,7 +79,7 @@ export class SummaryComponent implements OnInit {
         const resolverData = this.route.snapshot.parent.parent.data;
         if (resolverData) {
             this.project = <Project>resolverData['projectResolver'];
-            this.projectName = this.project.name;
+            this.projectName = this.project?.name;
         }
         const permissions = [
             {
