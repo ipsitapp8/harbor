@@ -20,6 +20,7 @@ import (
 	"net/url"
 	"strings"
 	"sync"
+	"time"
 
 	"github.com/docker/distribution/registry/client/auth/challenge"
 
@@ -49,6 +50,7 @@ func NewAuthorizer(username, password string, insecure bool, caCert ...string) l
 		password: password,
 		client: &http.Client{
 			Transport: transport,
+			Timeout:   30 * time.Minute, // prevent hanging auth requests if upstream is unresponsive
 		},
 	}
 }
